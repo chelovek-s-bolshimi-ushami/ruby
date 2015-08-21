@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 
 ENV RUBY_MAJOR 2.2
-ENV RUBY_VERSION 2.2.3
+ENV RUBY_VERSION 2.2.2
 ENV RAILS_VERSION 4.2.3
 
 RUN sed -i -- 's/archive.ubuntu.com/mirror.yandex.ru/g' /etc/apt/sources.list
