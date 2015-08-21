@@ -12,6 +12,8 @@ RUN sed -i -- 's/archive.ubuntu.com/mirror.yandex.ru/g' /etc/apt/sources.list
 RUN apt-get update -qq && apt-get upgrade -y \
   && apt-get install -y --no-install-recommends sudo build-essential autoconf curl git imagemagick wget automake libtool nginx
 
+RUN rm /etc/nginx/sites-enaibled/default
+
 #####################
 # Node installation #
 #####################
