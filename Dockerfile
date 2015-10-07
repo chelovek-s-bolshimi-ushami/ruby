@@ -6,7 +6,7 @@ ENV RAILS_VERSION 4.2.3
 
 RUN sed -i -- 's/archive.ubuntu.com/mirror.yandex.ru/g' /etc/apt/sources.list
 
-ENV LAST_UPDATED 22-09-2015
+ENV LAST_UPDATED 10-10-2015
 
 #####################
 #    Basic tools    #
