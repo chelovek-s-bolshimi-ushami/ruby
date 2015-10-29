@@ -40,6 +40,7 @@ RUN apt-get install -y --no-install-recommends bison libpq-dev libgdbm-dev ruby 
   && make -j"$(nproc)" \
   && make install \
   && apt-get purge -y --auto-remove bison ruby ruby-dev libgdbm-dev \
+  && apt-get autoremove -y
   && rm -r /usr/src/ruby
 
 # skip installing gem documentation
