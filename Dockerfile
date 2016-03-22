@@ -1,11 +1,11 @@
 FROM ubuntu:14.04
 
-ENV RUBY_MAJOR 2.3
-ENV RUBY_VERSION 2.3.0
+ENV RUBY_MAJOR 2.2
+ENV RUBY_VERSION 2.2.4
 
-RUN sed -i -- 's/archive.ubuntu.com/mirror.yandex.ru/g' /etc/apt/sources.list
+# RUN sed -i -- 's/archive.ubuntu.com/mirror.yandex.ru/g' /etc/apt/sources.list
 
-ENV LAST_UPDATED 20-02-2016
+ENV LAST_UPDATED 22-03-2016
 
 #####################
 #    Basic tools    #
