@@ -11,7 +11,7 @@ ENV LAST_UPDATED 22-03-2016
 #    Basic tools    #
 #####################
 RUN apt-get update -qq && apt-get upgrade -y \
-  && apt-get install -y --no-install-recommends sudo build-essential autoconf curl git imagemagick wget automake libtool nginx mysql-client vim-nox
+  && apt-get install -y --no-install-recommends sudo build-essential autoconf curl git imagemagick automake libtool nginx mysql-client vim-nox
 
 RUN rm /etc/nginx/sites-enabled/default
 
