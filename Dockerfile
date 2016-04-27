@@ -14,7 +14,27 @@ RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     sh -c "fping proxy && echo 'Acquire { Retries \"0\"; HTTP { Proxy \"http://proxy:3128\";}; };' > /etc/apt/apt.conf.d/40proxy && apt-get update || true" &&\
     apt-get -y install software-properties-common &&\
     apt-mark hold initscripts &&\
-    apt-get -y upgrade
+    apt-get -y upgrade &&\
+    add-apt-repository -y ppa:nginx/development &&\
+    curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash - &&\
+    apt-get -y update &&\
+    apt-get -y install build-essential git curl wget \
+                       libxslt-dev libcurl4-openssl-dev \
+                       libssl-dev libyaml-dev libtool \
+                       libxml2-dev gawk parallel \
+                       libreadline-dev autoconf automake libtool mysql-client\
+                       language-pack-en \
+                       psmisc vim-nox whois &&\
+    cd / &&\
+    apt-get clean &&\
+    locale-gen en_US ru_RU.UTF-8 &&\
+    apt-get install -y nodejs &&\
+    npm install uglify-js -g &&\
+    npm install svgo -g &&\
+    apt-get -y install advancecomp jhead jpegoptim libjpeg-progs optipng
+
+ADD install-imagemagick /tmp/install-imagemagick
+RUN /tmp/install-imagemagick
 
 RUN mkdir /jemalloc && cd /jemalloc &&\
       wget http://www.canonware.com/download/jemalloc/jemalloc-3.6.0.tar.bz2 &&\
@@ -22,24 +42,8 @@ RUN mkdir /jemalloc && cd /jemalloc &&\
       mv lib/libjemalloc.so.1 /usr/lib && cd / && rm -rf /jemalloc
 
 #####################
-#    Basic tools    #
-#####################
-RUN apt-get update -qq && apt-get upgrade -y \
-  && apt-get install -y --no-install-recommends sudo build-essential autoconf curl git imagemagick automake libtool nginx mysql-client vim-nox
-
-RUN rm /etc/nginx/sites-enabled/default
-
-#####################
-# Node installation #
-#####################
-
-RUN curl -sL https://deb.nodesource.com/setup | sudo bash - \
-  && apt-get install -y --no-install-recommends nodejs
-
-#####################
 # Ruby installation #
 #####################
-
 # some of ruby's build scripts are written in ruby
 # we purge this later to make sure our final image uses what we just built
 RUN apt-get install -y --no-install-recommends bison libpq-dev libgdbm-dev ruby ruby-dev libcurl3 libcurl3-dev libffi-dev libmagickwand-dev libmysqlclient-dev libv8-dev libreadline6 libreadline6-dev \
