@@ -1,4 +1,5 @@
-FROM ubuntu:14.04
+# FROM ubuntu:14.04
+FROM phusion/baseimage:latest
 
 ENV RUBY_MAJOR 2.2
 ENV RUBY_VERSION 2.2.5
@@ -9,24 +10,16 @@ RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main restricted universe" > /etc/apt/sources.list &&\
     echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc)-updates main restricted universe" >> /etc/apt/sources.list &&\
     echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc)-security main restricted universe" >> /etc/apt/sources.list &&\
-    apt-get update &&\
+    apt-get update && apt-get -y install fping &&\
+    sh -c "fping proxy && echo 'Acquire { Retries \"0\"; HTTP { Proxy \"http://proxy:3128\";}; };' > /etc/apt/apt.conf.d/40proxy && apt-get update || true" &&\
     apt-get -y install software-properties-common &&\
     apt-mark hold initscripts &&\
-    apt-get -y upgrade &&\
-    curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash - &&\
-    apt-get -y update &&\
-    apt-get -y install build-essential git curl wget \
-                       libxslt-dev libcurl4-openssl-dev \
-                       libssl-dev libyaml-dev libtool \
-                       libxml2-dev libreadline-dev \
-                       language-pack-en sudo vim-nox &&\
-   apt-get install -y nodejs &&\
-   npm install uglify-js -g &&\
-   mkdir /jemalloc && cd /jemalloc &&\
-   wget http://www.canonware.com/download/jemalloc/jemalloc-3.6.0.tar.bz2 &&\
-   tar -xjf jemalloc-3.6.0.tar.bz2 && cd jemalloc-3.6.0 && ./configure && make &&\
-   mv lib/libjemalloc.so.1 /usr/lib && cd / && rm -rf /jemalloc &&\
+    apt-get -y upgrade
 
+RUN mkdir /jemalloc && cd /jemalloc &&\
+      wget http://www.canonware.com/download/jemalloc/jemalloc-3.6.0.tar.bz2 &&\
+      tar -xjf jemalloc-3.6.0.tar.bz2 && cd jemalloc-3.6.0 && ./configure && make &&\
+      mv lib/libjemalloc.so.1 /usr/lib && cd / && rm -rf /jemalloc
 
 #####################
 #    Basic tools    #
