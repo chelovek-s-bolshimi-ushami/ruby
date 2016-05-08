@@ -2,7 +2,7 @@
 FROM phusion/baseimage:latest
 
 ENV RUBY_MAJOR 2.2
-ENV RUBY_VERSION 2.2.6
+ENV RUBY_VERSION 2.2.5
 
 ENV LAST_UPDATED 08-05-2016
 
@@ -15,23 +15,17 @@ RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     apt-get -y install software-properties-common &&\
     apt-mark hold initscripts &&\
     apt-get -y upgrade &&\
-    add-apt-repository -y ppa:nginx/development &&\
-    curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash - &&\
     apt-get -y update &&\
     apt-get -y install build-essential git curl wget \
                        libxslt-dev libcurl4-openssl-dev \
                        libssl-dev libyaml-dev libtool \
-                       libxml2-dev gawk parallel \
+                       libxml2-dev gawk \
                        libreadline-dev autoconf automake libtool mysql-client\
                        language-pack-en \
                        psmisc vim-nox whois &&\
     cd / &&\
     apt-get clean &&\
-    locale-gen en_US ru_RU.UTF-8 &&\
-    apt-get install -y nodejs &&\
-    npm install uglify-js -g &&\
-    npm install svgo -g &&\
-    apt-get -y install advancecomp jhead jpegoptim libjpeg-progs optipng
+    locale-gen en_US ru_RU.UTF-8
 
 ADD install-imagemagick /tmp/install-imagemagick
 RUN /tmp/install-imagemagick
@@ -46,7 +40,7 @@ RUN mkdir /jemalloc && cd /jemalloc &&\
 #####################
 # some of ruby's build scripts are written in ruby
 # we purge this later to make sure our final image uses what we just built
-RUN apt-get install -y --no-install-recommends bison libpq-dev libgdbm-dev ruby ruby-dev libcurl3 libcurl3-dev libffi-dev libmagickwand-dev libmysqlclient-dev libv8-dev libreadline6 libreadline6-dev \
+RUN apt-get install -y --no-install-recommends bison libgdbm-dev ruby ruby-dev libcurl3 libcurl3-dev libffi-dev libmagickwand-dev libmysqlclient-dev libv8-dev libreadline6 libreadline6-dev \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /usr/src/ruby \
   && curl -SL "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.bz2" \
