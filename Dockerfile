@@ -27,8 +27,9 @@ RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     apt-get clean &&\
     locale-gen en_US ru_RU.UTF-8
 
-ADD install-imagemagick /tmp/install-imagemagick
-RUN /tmp/install-imagemagick
+#ADD install-imagemagick /tmp/install-imagemagick
+#RUN /tmp/install-imagemagick
+RUN apt-get install imagemagick ghostscript
 
 RUN mkdir /jemalloc && cd /jemalloc &&\
       wget http://www.canonware.com/download/jemalloc/jemalloc-3.6.0.tar.bz2 &&\
