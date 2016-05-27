@@ -27,7 +27,7 @@ RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     apt-get clean &&\
     locale-gen en_US ru_RU.UTF-8
 
-#ADD install-imagemagick /tmp/install-imagemagick
+ADD install-imagemagick /tmp/install-imagemagick
 RUN /tmp/install-imagemagick
 # RUN apt-get -y install imagemagick ghostscript
 
