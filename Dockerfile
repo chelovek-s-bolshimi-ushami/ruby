@@ -68,6 +68,8 @@ RUN gem install bundler \
 # don't create ".bundle" in all our apps
 ENV BUNDLE_APP_CONFIG $GEM_HOME
 
+ENV RAILS_ENV development
+
 ENV LANG ru_RU.UTF-8
 ENV LC_CTYPE ru_RU.UTF-8
 ENV LC_NUMERIC ru_RU.UTF-8
