@@ -36,35 +36,44 @@ RUN mkdir /jemalloc && cd /jemalloc &&\
       tar -xjf jemalloc-3.6.0.tar.bz2 && cd jemalloc-3.6.0 && ./configure && make &&\
       mv lib/libjemalloc.so.1 /usr/lib && cd / && rm -rf /jemalloc
 
-#####################
-# Ruby installation #
-#####################
-# some of ruby's build scripts are written in ruby
-# we purge this later to make sure our final image uses what we just built
-RUN apt-get install -y --no-install-recommends bison libgdbm-dev ruby ruby-dev libcurl3 libcurl3-dev libffi-dev libmagickwand-dev libmysqlclient-dev libv8-dev libreadline6 libreadline6-dev \
-  && rm -rf /var/lib/apt/lists/* \
-  && mkdir -p /usr/src/ruby \
-  && curl -SL "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.bz2" \
-  | tar -xjC /usr/src/ruby --strip-components=1 \
-  && cd /usr/src/ruby \
-  && autoconf \
-  && ./configure --with-readline --disable-install-doc \
-  && make -j"$(nproc)" \
-  && make install \
-  && apt-get purge -y --auto-remove bison ruby ruby-dev libgdbm-dev \
-  && apt-get autoremove -y \
-  && rm -r /usr/src/ruby
+RUN echo 'gem: --no-document' >> /usr/local/etc/gemrc &&\
+    mkdir /src && cd /src && git clone https://github.com/sstephenson/ruby-build.git &&\
+    cd /src/ruby-build && ./install.sh &&\
+    cd / && rm -rf /src/ruby-build && ruby-build 2.3.1 /usr/local
 
-# skip installing gem documentation
-RUN echo 'gem: --no-rdoc --no-ri' >> "$HOME/.gemrc"
+RUN gem install bundler &&\
+    rm -rf /usr/local/share/ri/2.3.0/system &&\
+    cd / && git clone https://github.com/SamSaffron/pups.git
 
-# install things globally, for great justice
-ENV GEM_HOME /usr/local/bundle
-ENV PATH $GEM_HOME/bin:$PATH
-RUN gem install bundler \
-  && bundle config --global path "$GEM_HOME" \
-  && bundle config --global bin "$GEM_HOME/bin"
-
+# #####################
+# # Ruby installation #
+# #####################
+# # some of ruby's build scripts are written in ruby
+# # we purge this later to make sure our final image uses what we just built
+# RUN apt-get install -y --no-install-recommends bison libgdbm-dev ruby ruby-dev libcurl3 libcurl3-dev libffi-dev libmagickwand-dev libmysqlclient-dev libv8-dev libreadline6 libreadline6-dev \
+#   && rm -rf /var/lib/apt/lists/* \
+#   && mkdir -p /usr/src/ruby \
+#   && curl -SL "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.bz2" \
+#   | tar -xjC /usr/src/ruby --strip-components=1 \
+#   && cd /usr/src/ruby \
+#   && autoconf \
+#   && ./configure --with-readline --disable-install-doc \
+#   && make -j"$(nproc)" \
+#   && make install \
+#   && apt-get purge -y --auto-remove bison ruby ruby-dev libgdbm-dev \
+#   && apt-get autoremove -y \
+#   && rm -r /usr/src/ruby
+#
+# # skip installing gem documentation
+# RUN echo 'gem: --no-rdoc --no-ri' >> "$HOME/.gemrc"
+#
+# # install things globally, for great justice
+# ENV GEM_HOME /usr/local/bundle
+# ENV PATH $GEM_HOME/bin:$PATH
+# RUN gem install bundler \
+#   && bundle config --global path "$GEM_HOME" \
+#   && bundle config --global bin "$GEM_HOME/bin"
+#
 # don't create ".bundle" in all our apps
 ENV BUNDLE_APP_CONFIG $GEM_HOME
 
@@ -89,4 +98,14 @@ ENV RUBY_GC_HEAP_INIT_SLOTS 600000
 ENV RUBY_GC_MALLOC_LIMIT 59000000
 ENV RUBY_GC_HEAP_FREE_SLOTS 100000
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN   rm -fr /usr/share/man &&\
+      rm -fr /usr/share/doc &&\
+      rm -fr /usr/share/vim/vim74/tutor &&\
+      rm -fr /usr/share/vim/vim74/doc &&\
+      rm -fr /usr/share/vim/vim74/lang &&\
+      rm -fr /usr/local/share/doc &&\
+      rm -fr /usr/local/share/ruby-build &&\
+      rm -fr /root/.gem &&\
+      rm -fr /root/.npm &&\
+      rm -fr /tmp/* &&\
+      rm -fr /usr/share/vim/vim74/spell/en*
