@@ -1,10 +1,10 @@
 # FROM ubuntu:14.04
 FROM phusion/baseimage:latest
 
-ENV RUBY_MAJOR 2.2
-ENV RUBY_VERSION 2.2.5
+ENV RUBY_MAJOR 2.3
+ENV RUBY_VERSION 2.3.1
 
-ENV LAST_UPDATED 08-05-2016
+ENV LAST_UPDATED 22-07-2016
 
 RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main restricted universe" > /etc/apt/sources.list &&\
