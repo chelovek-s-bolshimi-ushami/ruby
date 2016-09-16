@@ -3,7 +3,7 @@ FROM phusion/baseimage:latest
 ENV RUBY_MAJOR 2.3
 ENV RUBY_VERSION 2.3.1
 
-ENV LAST_UPDATED 22-07-2016
+ENV LAST_UPDATED 16-09-2016
 
 RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main restricted universe" > /etc/apt/sources.list &&\
@@ -19,7 +19,7 @@ RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
                        libxslt-dev libcurl4-openssl-dev \
                        libssl-dev libyaml-dev libtool \
                        libxml2-dev gawk \
-                       libreadline-dev autoconf automake libtool mysql-client\
+                       libreadline-dev autoconf automake libtool mysql-client \
                        language-pack-en \
                        psmisc vim-nox whois &&\
     cd / &&\
@@ -43,8 +43,7 @@ RUN gem install bundler &&\
     rm -rf /usr/local/share/ri/2.3.0/system &&\
     cd / && git clone https://github.com/SamSaffron/pups.git
 
-# don't create ".bundle" in all our apps
-ENV BUNDLE_APP_CONFIG $GEM_HOME
+ENV BUNDLE_APP_CONFIG /opt/app/.bundle/config
 
 ENV RAILS_ENV development
 
