@@ -3,7 +3,7 @@ FROM phusion/baseimage:latest
 ENV RUBY_MAJOR 2.3
 ENV RUBY_VERSION 2.3.1
 
-ENV LAST_UPDATED 16-09-2016
+ENV LAST_UPDATED 18-11-2016
 
 RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main restricted universe" > /etc/apt/sources.list &&\
