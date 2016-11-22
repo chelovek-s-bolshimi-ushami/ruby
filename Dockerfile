@@ -1,4 +1,6 @@
 FROM phusion/baseimage:latest
+#FROM ubuntu:16.04
+
 
 ENV RUBY_MAJOR 2.3
 ENV RUBY_VERSION 2.3.1
@@ -39,7 +41,7 @@ RUN echo 'gem: --no-document' >> /usr/local/etc/gemrc &&\
     cd /src/ruby-build && ./install.sh &&\
     cd / && rm -rf /src/ruby-build && ruby-build 2.3.1 /usr/local
 
-RUN gem install bundler &&\
+RUN gem install bundler rack &&\
     rm -rf /usr/local/share/ri/2.3.0/system &&\
     cd / && git clone https://github.com/SamSaffron/pups.git
 
