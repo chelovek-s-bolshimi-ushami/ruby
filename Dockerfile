@@ -3,9 +3,9 @@ FROM phusion/baseimage:latest
 
 
 ENV RUBY_MAJOR 2.3
-ENV RUBY_VERSION 2.3.1
+ENV RUBY_VERSION 2.3.3
 
-ENV LAST_UPDATED 18-11-2016
+ENV LAST_UPDATED 26-01-2017
 
 RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
     echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main restricted universe" > /etc/apt/sources.list &&\
@@ -24,9 +24,9 @@ RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
                        libreadline-dev autoconf automake libtool mysql-client \
                        language-pack-en \
                        psmisc vim-nox whois &&\
-    cd / &&\
-    apt-get clean &&\
-    locale-gen en_US ru_RU.UTF-8
+                       cd / &&\
+                       apt-get clean &&\
+                       locale-gen en_US ru_RU.UTF-8
 
 ADD install-imagemagick /tmp/install-imagemagick
 RUN /tmp/install-imagemagick
@@ -44,6 +44,10 @@ RUN echo 'gem: --no-document' >> /usr/local/etc/gemrc &&\
 RUN gem install bundler rack &&\
     rm -rf /usr/local/share/ri/2.3.0/system &&\
     cd / && git clone https://github.com/SamSaffron/pups.git
+
+RUN curl --silent --location https://deb.nodesource.com/setup_6.x | bash - &&\
+    apt-get install -y nodejs &&\
+    npm install webpack webpack-dev-server -g
 
 ENV BUNDLE_APP_CONFIG /opt/app/.bundle/config
 
