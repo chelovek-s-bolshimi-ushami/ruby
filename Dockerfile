@@ -8,9 +8,7 @@ ENV RUBY_VERSION 2.3.3
 ENV LAST_UPDATED 26-01-2017
 
 RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
-    echo "deb http://old-releases.ubuntu.com/ubuntu $(lsb_release -sc) main restricted universe" > /etc/apt/sources.list &&\
-    echo "deb http://old-releases.ubuntu.com/ubuntu $(lsb_release -sc)-updates main restricted universe" >> /etc/apt/sources.list &&\
-    echo "deb http://old-releases.ubuntu.com/ubuntu $(lsb_release -sc)-security main restricted universe" >> /etc/apt/sources.list &&\
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial main restricted universe" > /etc/apt/sources.list &&\
     apt-get update && apt-get -y install fping &&\
     sh -c "fping proxy && echo 'Acquire { Retries \"0\"; HTTP { Proxy \"http://proxy:3128\";}; };' > /etc/apt/apt.conf.d/40proxy && apt-get update || true" &&\
     apt-get -y install software-properties-common &&\
