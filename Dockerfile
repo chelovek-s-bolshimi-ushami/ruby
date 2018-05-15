@@ -7,9 +7,7 @@ ENV RUBY_VERSION 2.3.3
 
 ENV LAST_UPDATED 26-01-2017
 
-RUN echo "debconf debconf/frontend select Teletype" | debconf-set-selections &&\
-    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial main restricted universe" > /etc/apt/sources.list &&\
-    apt-get update && apt-get -y install fping &&\
+RUN apt-get update && apt-get -y install fping &&\
     sh -c "fping proxy && echo 'Acquire { Retries \"0\"; HTTP { Proxy \"http://proxy:3128\";}; };' > /etc/apt/apt.conf.d/40proxy && apt-get update || true" &&\
     apt-get -y install software-properties-common &&\
     apt-mark hold initscripts &&\
@@ -30,8 +28,8 @@ ADD install-imagemagick /tmp/install-imagemagick
 RUN /tmp/install-imagemagick
 
 RUN mkdir /jemalloc && cd /jemalloc &&\
-      wget http://www.canonware.com/download/jemalloc/jemalloc-3.6.0.tar.bz2 &&\
-      tar -xjf jemalloc-3.6.0.tar.bz2 && cd jemalloc-3.6.0 && ./configure && make &&\
+      wget https://github.com/jemalloc/jemalloc/releases/download/3.6.0/jemalloc-3.6.0.tar.bz2 &&\
+      tar -xjf jemalloc-3.6.0.tar.bz2 && cd jemalloc-3.6.0 && ./configure && make -j4 &&\
       mv lib/libjemalloc.so.1 /usr/lib && cd / && rm -rf /jemalloc
 
 RUN echo 'gem: --no-document' >> /usr/local/etc/gemrc &&\
